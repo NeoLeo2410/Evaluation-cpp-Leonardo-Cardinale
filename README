@@ -1,7 +1,6 @@
 Utiliser C++ 20 pour la compilation.
 
-La question 1 est traitée dans les fichiers intitulés Matrix (.hpp pour la définition de la class,
-.cpp pour les diverses méthodes ou constructeurs associés).
+La question 1 est traitée dans les fichiers intitulés Matrix (.hpp pour la définition de la classe, .cpp pour les diverses méthodes ou constructeurs associés).
 
 Les autres questions sont traitées les fichiers portant le numéro de la question correspondante.
 
