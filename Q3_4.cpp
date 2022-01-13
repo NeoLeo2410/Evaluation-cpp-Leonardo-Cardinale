@@ -103,8 +103,11 @@ std::vector<std::vector<double> > euler_implicite(double& step, double& T){
         Matrix prev(solution[solution.size() - 1],0);
         Matrix next(f(prev) * step);
         Matrix x0(prev + next);
-        Matrix I(n,n,1.0);
-        solution.push_back(gradient_conjugue(K(D,dx) - I,prev*(-1.0),x0,dx).tovector());
+        Matrix I(n,n,0.0); // construction sur-le-champ d'une matrice identité
+        for (unsigned i = 0; i < n; i++){
+            I(i,i) = 1.0;
+        }
+        solution.push_back(gradient_conjugue(I - (K(D,dx)*step),prev,x0,dx).tovector());
         dates.push_back(dates[dates.size() - 1] + step);
     }
     return solution;
