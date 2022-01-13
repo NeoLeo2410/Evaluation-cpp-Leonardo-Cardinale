@@ -1,7 +1,10 @@
 #include "Matrix.cpp"
 #include <fstream>
 
-double dx = 0.01; // Pas spatial
+unsigned nx = 21; // Nombre de points
+unsigned nt = 1001; // Nombre de dates
+
+double dx = 1.0/nx; // Pas spatial
 
 // Construction de la condition initiale
 
@@ -48,6 +51,14 @@ Matrix K(Matrix D, double dx){
             cond(i,i-1) = D(0,i)/std::pow(dx,2);
         }
     }
+    for (unsigned i = 1; i < n; i++){
+        cond(0,i) = 0;
+    }
+    for (unsigned i = 0; i < n - 1; i++){
+        cond(n-1,i) = 0;
+    }
+    cond(0,0) = - (D(0,0) + D(0,1))/std::pow(dx,2);
+    cond(n-1,n-1) = - (D(0,n-1) + D(0,n-1))/std::pow(dx,2);
     return cond;
 }
 
@@ -55,7 +66,7 @@ Matrix K(Matrix D, double dx){
 
 Matrix f(Matrix T){ 
     Matrix T1(T.transpose());
-    Matrix m((K(D,dx) * T1) * (-1.0));
+    Matrix m(K(D,dx) * T1);
     Matrix n(m.transpose());
     return n;
 }
@@ -112,8 +123,11 @@ std::vector<std::vector<double> > euler_implicite(double& step, double& T){
         Matrix prev(solution[solution.size() - 1],0);
         Matrix next(f(prev) * step);
         Matrix x0(prev + next);
-        Matrix I(n,n,1.0);
-        solution.push_back(gauss(K(D,dx) - I,prev*(-1.0)).tovector());
+        Matrix I(n,n,0.0);
+        for (unsigned i = 0; i < n; i++){
+            I(i,i) = 1.0;
+        }
+        solution.push_back(gauss(I - (K(D,dx)*step),prev).tovector());
         dates.push_back(dates[dates.size() - 1] + step);
     }
     return solution;
@@ -142,8 +156,8 @@ void exportsolution(std::vector<std::vector<double> > v){
 }
 
 int main(){
-    double dt = 0.01; // Pas temporel
     double horiz = 0.5; // Horizon temporelle
+    double dt = horiz/nt; // Pas temporel
     std::vector<std::vector<double> > solution = euler_implicite(dt,horiz);
     exportsolution(solution);
     return EXIT_SUCCESS;
