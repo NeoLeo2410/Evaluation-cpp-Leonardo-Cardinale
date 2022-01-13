@@ -1,5 +1,6 @@
 #include "Matrix.cpp"
 #include <fstream>
+#include <Eigen/Dense>
 
 unsigned nx = 21; // Nombre de points
 unsigned nt = 1001; // Nombre de dates
@@ -114,6 +115,54 @@ Matrix gauss(Matrix A, Matrix B){
     return X;
 }
 
+// Conversion Matrix -> Eigen::MatrixXd
+
+Eigen::MatrixXd matrixtoeigen(Matrix& M){
+    unsigned n = M.getrows();
+    unsigned p = M.getcolumns();
+    Eigen::MatrixXd m(n,p);
+    for (unsigned i = 0; i < n; i++){
+        for (unsigned j = 0; j < p; j++){
+            m(i,j) = M(i,j);
+        }
+    } 
+    return m;
+}
+
+// Conversion matrice ligne -> Eigen::VectorXd
+
+Eigen::VectorXd vectortoeigen(Matrix& V){
+    unsigned n = V.getrows();
+    unsigned p = V.getcolumns();
+    if (n != 1){
+        throw std::runtime_error("Argument must be row matrix");
+    }
+    else{
+        Eigen::VectorXd v(p);
+        for (unsigned j = 0; j < p; j++){
+            v(j) = V(0,j);
+        }
+    return v;
+    }
+}
+
+// Conversion Eigen::VectorXd -> std::vector
+
+std::vector<double> eigentovector(Eigen::VectorXd& v){
+    unsigned n = v.rows();
+    unsigned p = v.cols();
+    if (n != 1){
+        throw std::runtime_error("Argument must be row matrix");
+    }
+    else{
+        std::vector<double> vec(p);
+        for (unsigned i = 0; i < p; i++){
+            vec[i] = v(i);
+        }
+    }
+    return vec;
+}
+
 // Avec la méthode d'Euler, on obtient un vecteur de vecteurs où l'élément (i,j) représente T_j(i*dt)
 
 std::vector<std::vector<double> > euler_implicite(double& step, double& T){
@@ -127,7 +176,11 @@ std::vector<std::vector<double> > euler_implicite(double& step, double& T){
         for (unsigned i = 0; i < n; i++){
             I(i,i) = 1.0;
         }
-        solution.push_back(gauss(I - (K(D,dx)*step),prev).tovector());
+        Eigen::MatrixXd A(n,n);
+        A = matrixtoeigen(I - (K(D,dx)*step));
+        Eigen::VectorXd B(n);
+        B = vectortoeigen(prev);
+        solution.push_back(eigentovector(A.ldlt().solve(B)));
         dates.push_back(dates[dates.size() - 1] + step);
     }
     return solution;
