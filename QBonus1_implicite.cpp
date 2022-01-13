@@ -117,7 +117,7 @@ Matrix gauss(Matrix A, Matrix B){
 
 // Conversion Matrix -> Eigen::MatrixXd
 
-Eigen::MatrixXd matrixtoeigen(Matrix& M){
+Eigen::MatrixXd matrixtoeigen(Matrix M){
     unsigned n = M.getrows();
     unsigned p = M.getcolumns();
     Eigen::MatrixXd m(n,p);
@@ -131,7 +131,7 @@ Eigen::MatrixXd matrixtoeigen(Matrix& M){
 
 // Conversion matrice ligne -> Eigen::VectorXd
 
-Eigen::VectorXd vectortoeigen(Matrix& V){
+Eigen::VectorXd vectortoeigen(Matrix V){
     unsigned n = V.getrows();
     unsigned p = V.getcolumns();
     if (n != 1){
@@ -148,17 +148,11 @@ Eigen::VectorXd vectortoeigen(Matrix& V){
 
 // Conversion Eigen::VectorXd -> std::vector
 
-std::vector<double> eigentovector(Eigen::VectorXd& v){
+std::vector<double> eigentovector(Eigen::VectorXd v){
     unsigned n = v.rows();
-    unsigned p = v.cols();
-    if (n != 1){
-        throw std::runtime_error("Argument must be row matrix");
-    }
-    else{
-        std::vector<double> vec(p);
-        for (unsigned i = 0; i < p; i++){
-            vec[i] = v(i);
-        }
+    std::vector<double> vec(n);
+    for (unsigned i = 0; i < n; i++){
+        vec[i] = v(i);
     }
     return vec;
 }
@@ -180,7 +174,7 @@ std::vector<std::vector<double> > euler_implicite(double& step, double& T){
         A = matrixtoeigen(I - (K(D,dx)*step));
         Eigen::VectorXd B(n);
         B = vectortoeigen(prev);
-        solution.push_back(eigentovector(A.ldlt().solve(B)));
+        solution.push_back(eigentovector(A.lu().solve(B)));
         dates.push_back(dates[dates.size() - 1] + step);
     }
     return solution;
