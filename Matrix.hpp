@@ -4,6 +4,7 @@
 #include <tuple>
 #include <functional>
 #include <cmath>
+#include <chrono>
 
 class Matrix{
     private: // une matrice est ici caractérisée par sa forme et des données stockées dans un vecteur de vecteurs (les lignes) de doubles

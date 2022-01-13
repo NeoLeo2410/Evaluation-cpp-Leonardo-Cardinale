@@ -94,7 +94,11 @@ void exportsolution(std::vector<std::vector<double> > v){
 int main(){
     double horiz = 0.5; // Horizon temporelle
     double dt = horiz/nt; // Pas temporel
+    auto start = std::chrono::high_resolution_clock::now();
     std::vector<std::vector<double> > solution = euler_explicite(dt,horiz);
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    std::cout << duration.count() << " μs" << std::endl;
     exportsolution(solution);
     return EXIT_SUCCESS;
 }
