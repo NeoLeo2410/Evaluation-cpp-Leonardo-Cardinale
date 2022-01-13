@@ -2,19 +2,20 @@
 #include <fstream>
 #include <random>
 
-double dx = 0.01; // Pas spatial
+unsigned nx = 21; // Nombre de points
+unsigned nt = 1001; // Nombre de dates
+
+double dx = 1.0/nx; // Pas spatial
 
 // Construction de la condition initiale
 
 std::vector<double> initial_vector(double& dx){
-    std::vector<double> initial;
-    initial.push_back(0.0);
-    double x = 0;
-    while (x + dx <= 1){
-        x += dx;
+    std::vector<double> initial(nx,0.0);
+    for (unsigned i = 0; i < nx; i++){
+        double x = i * dx;
         double y;
         y = 0.5 + 0.5 * std::sin(2 * M_PI * x) - 0.5 * std::cos(2 * M_PI * x);
-        initial.push_back(y);
+        initial[i] = y;
     }
     return initial;
 }
@@ -49,6 +50,14 @@ Matrix K(Matrix D, double dx){
             cond(i,i-1) = D(0,i)/std::pow(dx,2);
         }
     }
+    for (unsigned i = 1; i < n; i++){
+        cond(0,i) = 0;
+    }
+    for (unsigned i = 0; i < n - 1; i++){
+        cond(n-1,i) = 0;
+    }
+    cond(0,0) = - (D(0,0) + D(0,1))/std::pow(dx,2);
+    cond(n-1,n-1) = - (D(0,n-1) + D(0,n-1))/std::pow(dx,2);
     return cond;
 }
 
@@ -56,7 +65,7 @@ Matrix K(Matrix D, double dx){
 
 Matrix f(Matrix T){ 
     Matrix T1(T.transpose());
-    Matrix m((K(D,dx) * T1) * (-1.0));
+    Matrix m(K(D,dx) * T1);
     Matrix n(m.transpose());
     return n;
 }
@@ -98,8 +107,8 @@ void exportsolution(std::vector<std::vector<double> > v){
 }
 
 int main(){
-    double dt = 0.01; // Pas temporel 
     double horiz = 0.5; // Horizon temporelle
+    double dt = horiz/nt; // Pas temporel
     std::vector<std::vector<double> > solution = euler_explicite(dt,horiz);
     exportsolution(solution);
     return EXIT_SUCCESS;
