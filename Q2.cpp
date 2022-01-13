@@ -26,14 +26,16 @@ Matrix K(Matrix D, double dx){
     unsigned n = D.getcolumns();
     Matrix cond(n, n, 0.0);
     for (unsigned i = 0; i < n; i++){
-        if (i+1 < n){
+        if ((i+1 < n) && (i!=0)){
             cond(i,i+1) = D(0,i+1)/(std::pow(dx,2));
             cond(i,i) = - (D(0,i) + D(0,i+1))/std::pow(dx,2);
         }
-        else if (i-1 >= 0){
+        else if ((i-1 >= 0) && (i!=n-1)){
             cond(i,i-1) = D(0,i)/std::pow(dx,2);
         }
     }
+    K(0,0) = - (D(0,0) + D(0,1))/std::pow(dx,2);
+    K(n-1,n-1) = - (D(0,n-1) + D(0,n-1))/std::pow(dx,2);
     return cond;
 }
 
