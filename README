@@ -1,7 +1,6 @@
 Utiliser C++ 20 pour la compilation.
 
 La question 1 est traitée dans les fichiers intitulés Matrix (.hpp pour la définition de la classe, .cpp pour les diverses méthodes ou constructeurs associés).
-
 Les autres questions sont traitées dans les fichiers portant le numéro de la question correspondante.
 
 Pour la question bonus 1, le cas explicite est traité dans un fichier séparé de celui du cas implicite.
@@ -9,3 +8,11 @@ Pour la question bonus 1, le cas explicite est traité dans un fichier séparé 
 Quelques tests ont été effectués lors de l'élaboration de la classe Matrix dans le fichier test_matrix.cpp.
 
 On obtient des listes de listes dans les fichiers .txt à être passés en argument dans numpy.array en Python.
+
+Les réponses et diverses courbes sont obtenues dans le notebook Courbes matplotlib.ipynb. 
+Néanmoins, on pourra exécuter animated.py pour la visualisation en direct de l’évolution du champ de température.
+
+Sur mon ordinateur (Mac), animated.py fonctionne bien via le terminal par défaut, mais j'obtiens des résultats incohérents via le terminal de VSCode. Eventuellement privilégier le terminal classique si problème.
+
+La librarie externe Eigen est utilisée pour résoudre des systèmes linéaires et implémenter les matrices creuses. 
+Eigen est disponible sur https://eigen.tuxfamily.org/index.php?title=Main_Page. Le header est cependant présent dans ce dossier et peut ainsi directement être inclus dans les fichiers .cpp.
