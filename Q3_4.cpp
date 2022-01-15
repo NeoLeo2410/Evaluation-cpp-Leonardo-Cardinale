@@ -117,21 +117,19 @@ std::vector<std::vector<double> > euler_implicite(double& step, double& T){
 
 void exportsolution(std::vector<std::vector<double> > v){
     unsigned n = v.size();
+    unsigned m = v[0].size();
     std::ofstream myfile;
     myfile.open("Q3_4.txt");
-    myfile << "[";
     for (unsigned i = 0; i < n - 1; i++){
-        myfile << "[";
-        for (unsigned j = 0; j < v[i].size() - 1; j++){
-            myfile << v[i][j] << ",";
+        for (unsigned j = 0; j < m - 1; j++){
+            myfile << v[i][j] << " ";
         }
-        myfile << v[i][v[i].size() - 1] << "],";
+        myfile << v[i][m-1] << "\n";
     }
-    myfile << "[";
-    for (unsigned j = 0; j < v[n-1].size() - 1; j++){
-        myfile << v[n-1][j] << ",";
+    for (unsigned j = 0; j < m - 1; j++){
+        myfile << v[n-1][j] << " ";
     }
-    myfile << v[n-1][v[n-1].size() - 1] << "]]" << std::endl;
+    myfile << v[n-1][m-1] << std::endl;
     myfile.close();
 }
 
