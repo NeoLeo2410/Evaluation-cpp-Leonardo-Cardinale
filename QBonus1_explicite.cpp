@@ -5,7 +5,7 @@
 unsigned nx = 21; // Nombre de points
 unsigned nt = 1001; // Nombre de dates
 
-double dx = 1.0/nx; // Pas spatial
+double dx = 1.0/(nx-1); // Pas spatial
 
 // Construction de la condition initiale
 
@@ -108,7 +108,7 @@ void exportsolution(std::vector<std::vector<double> > v){
 
 int main(){
     double horiz = 0.5; // Horizon temporelle
-    double dt = horiz/nt; // Pas temporel
+    double dt = horiz/(nt-1); // Pas temporel
     std::vector<std::vector<double> > solution = euler_explicite(dt,horiz);
     exportsolution(solution);
     return EXIT_SUCCESS;

@@ -1,13 +1,13 @@
 #include "Matrix.cpp"
 #include <fstream>
-#include <Eigen/Dense>
-#include <Eigen/Sparse>
-#include <Eigen/IterativeLinearSolvers>
+#include "Eigen/Dense"
+#include "Eigen/Sparse"
+#include "Eigen/IterativeLinearSolvers"
 
 unsigned nx = 21; // Nombre de points
 unsigned nt = 1001; // Nombre de dates
 
-double dx = 1.0/nx; // Pas spatial
+double dx = 1.0/(nx-1); // Pas spatial
 
 // Construction de la condition initiale
 
@@ -103,7 +103,7 @@ std::vector<std::vector<double> > euler_implicite(double& step, double& T){
 void exportsolution(std::vector<std::vector<double> > v){
     unsigned n = v.size();
     std::ofstream myfile;
-    myfile.open("Q3_4Sparse.txt");
+    myfile.open("QBonus2_implicite.txt");
     myfile << "[";
     for (unsigned i = 0; i < n - 1; i++){
         myfile << "[";
@@ -122,7 +122,7 @@ void exportsolution(std::vector<std::vector<double> > v){
 
 int main(){
     double horiz = 0.5; // Horizon temporelle
-    double dt = horiz/nt; // Pas temporel
+    double dt = horiz/(nt-1); // Pas temporel
     auto start = std::chrono::high_resolution_clock::now();
     std::vector<std::vector<double> > solution = euler_implicite(dt,horiz);
     auto stop = std::chrono::high_resolution_clock::now();

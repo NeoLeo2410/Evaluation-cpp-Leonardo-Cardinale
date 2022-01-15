@@ -1,23 +1,21 @@
 #include "Matrix.cpp"
 #include <fstream>
-#include <Eigen/Dense>
+#include "Eigen/Dense"
 
 unsigned nx = 21; // Nombre de points
 unsigned nt = 1001; // Nombre de dates
 
-double dx = 1.0/nx; // Pas spatial
+double dx = 1.0/(nx-1); // Pas spatial
 
 // Construction de la condition initiale
 
 std::vector<double> initial_vector(double& dx){
-    std::vector<double> initial;
-    initial.push_back(0.0);
-    double x = 0;
-    while (x + dx <= 1){
-        x += dx;
+    std::vector<double> initial(nx,0.0);
+    for (unsigned i = 0; i < nx; i++){
+        double x = i * dx;
         double y;
         y = 0.5 + 0.5 * std::sin(2 * M_PI * x) - 0.5 * std::cos(2 * M_PI * x);
-        initial.push_back(y);
+        initial[i] = y;
     }
     return initial;
 }
@@ -204,7 +202,7 @@ void exportsolution(std::vector<std::vector<double> > v){
 
 int main(){
     double horiz = 0.5; // Horizon temporelle
-    double dt = horiz/nt; // Pas temporel
+    double dt = horiz/(nt-1); // Pas temporel
     std::vector<std::vector<double> > solution = euler_implicite(dt,horiz);
     exportsolution(solution);
     return EXIT_SUCCESS;
