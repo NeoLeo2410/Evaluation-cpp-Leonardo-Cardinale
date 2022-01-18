@@ -11,7 +11,7 @@ x = np.array([i * dx for i in range(nx)])
 
 # On choisit le profil obtenu avec la methode d'Euler implicite et les matrices creuses par exemple.
 
-arr = np.loadtxt("QBonus2_implicite.txt")
+arr = np.loadtxt("QBonus1_implicite.txt")
 
 fig, ax = plt.subplots()
 

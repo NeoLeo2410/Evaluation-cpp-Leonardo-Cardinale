@@ -14,7 +14,7 @@ std::vector<double> initial_vector(double& dx){
     for (unsigned i = 0; i < nx; i++){
         double x = i * dx;
         double y;
-        y = 0.5 + 0.5 * std::sin(2 * M_PI * x) - 0.5 * std::cos(2 * M_PI * x);
+        y = 0.5 + std::sin(2 * M_PI * x) - 0.5 * std::cos(2 * M_PI * x);
         initial[i] = y;
     }
     return initial;
@@ -46,7 +46,7 @@ Matrix K(Matrix D, double dx){
             cond(i,i+1) = D(0,i+1)/(std::pow(dx,2));
             cond(i,i) = - (D(0,i) + D(0,i+1))/std::pow(dx,2);
         }
-        else if (i-1 >= 0){
+        if (i != 0){
             cond(i,i-1) = D(0,i)/std::pow(dx,2);
         }
     }
