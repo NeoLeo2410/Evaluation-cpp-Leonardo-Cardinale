@@ -8,7 +8,7 @@ Quelques tests ont été effectués lors de l'élaboration de la classe Matrix d
 Pour les questions bonus 1 et 2, le cas explicite est traité dans un fichier séparé de celui du cas implicite.
 
 Les réponses et diverses courbes sont obtenues dans le notebook Courbes matplotlib.ipynb. 
-Néanmoins, on pourra exécuter animated.py pour la visualisation en direct de l’évolution du champ de température.
+Néanmoins, on pourra exécuter animated.py pour la visualisation en direct de l’évolution du champ de température dans le cas de D constant = 1, ou animated_random.py dans le cas d'un D aléatoire (question bonus).
 
 La librarie externe Eigen est utilisée pour résoudre des systèmes linéaires et implémenter les matrices creuses. 
 Eigen est disponible sur https://eigen.tuxfamily.org/index.php?title=Main_Page. Le header est cependant présent dans ce dossier et peut ainsi directement être inclus dans les fichiers .cpp.
