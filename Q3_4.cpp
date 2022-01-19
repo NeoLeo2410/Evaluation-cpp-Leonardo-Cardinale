@@ -1,16 +1,14 @@
-#include "Matrix.cpp"
-#include <fstream>
+#include "Q2.cpp"
 
-unsigned nx = 21; // Nombre de points
-unsigned nt = 1001; // Nombre de dates
+unsigned nx_Q4 = 21; // Nombre de points
 
-double dx = 1.0/(nx-1); // Pas spatial
+double dx_Q4 = 1.0/(nx_Q4-1); // Pas spatial
 
 // Construction de la condition initiale
 
-std::vector<double> initial_vector(double& dx){
-    std::vector<double> initial(nx,0.0);
-    for (unsigned i = 0; i < nx; i++){
+std::vector<double> initial_vector_Q4(double& dx){
+    std::vector<double> initial(nx_Q4,0.0);
+    for (unsigned i = 0; i < nx_Q4; i++){
         double x = i * dx;
         double y;
         y = 0.5 + std::sin(2 * M_PI * x) - 0.5 * std::cos(2 * M_PI * x);
@@ -19,11 +17,11 @@ std::vector<double> initial_vector(double& dx){
     return initial;
 }
 
-std::vector<double> vec = initial_vector(dx);
-unsigned n = vec.size();
-Matrix D(1,n,1.0); // Matrice de conductivité thermique
+std::vector<double> vec_Q4 = initial_vector_Q4(dx_Q4);
+//unsigned n = vec.size();
+Matrix D_Q4(1,nx_Q4,1.0); // Matrice de conductivité thermique
 
-Matrix K(Matrix D, double dx){
+Matrix K_Q4(Matrix D, double dx){
     unsigned n = D.getcolumns();
     Matrix cond(n, n, 0.0);
     for (unsigned i = 0; i < n; i++){
@@ -48,9 +46,9 @@ Matrix K(Matrix D, double dx){
 
 // Fonction qui entre en jeu dans la méthode d'Euler. On travaille avec des vecteurs convertis en matrices lignes, d'où le passage par la transposée pour la phase de calcul, puis de nouveau pour retourner le résultat
 
-Matrix f(Matrix T){ 
+Matrix f_Q4(Matrix T){ 
     Matrix T1(T.transpose());
-    Matrix m(K(D,dx) * T1);
+    Matrix m(K_Q4(D_Q4,dx_Q4) * T1);
     Matrix n(m.transpose());
     return n;
 }
@@ -96,18 +94,18 @@ Matrix gradient_conjugue(Matrix A, Matrix b, Matrix x0, double eps){
 
 // Avec la méthode d'Euler, on obtient un vecteur de vecteurs où l'élément (i,j) représente T_j(i*dt)
 
-std::vector<std::vector<double> > euler_implicite(double& step, double& T){
+std::vector<std::vector<double> > euler_implicite_Q4(double& step, double& T){
     std::vector<double> dates {0.0};
-    std::vector<std::vector<double> > solution {vec};
+    std::vector<std::vector<double> > solution {vec_Q4};
     while (dates[dates.size() - 1] + step < T){
         Matrix prev(solution[solution.size() - 1],0);
-        Matrix next(f(prev) * step);
+        Matrix next(f_Q4(prev) * step);
         Matrix x0(prev + next);
-        Matrix I(n,n,0.0); // construction sur-le-champ d'une matrice identité
-        for (unsigned i = 0; i < n; i++){
+        Matrix I(nx_Q4,nx_Q4,0.0); // construction sur-le-champ d'une matrice identité
+        for (unsigned i = 0; i < nx_Q4; i++){
             I(i,i) = 1.0;
         }
-        solution.push_back(gradient_conjugue(I - (K(D,dx)*step),prev,x0,dx).tovector());
+        solution.push_back(gradient_conjugue(I - (K_Q4(D_Q4,dx_Q4)*step),prev,x0,dx_Q4).tovector());
         dates.push_back(dates[dates.size() - 1] + step);
     }
     return solution;
@@ -115,7 +113,7 @@ std::vector<std::vector<double> > euler_implicite(double& step, double& T){
 
 // Pour exporter au format .txt une liste de listes pouvant être passée en argument à numpy.array() en Python
 
-void exportsolution(std::vector<std::vector<double> > v){
+void exportsolution_Q4(std::vector<std::vector<double> > v){
     unsigned n = v.size();
     unsigned m = v[0].size();
     std::ofstream myfile;
@@ -133,7 +131,7 @@ void exportsolution(std::vector<std::vector<double> > v){
     myfile.close();
 }
 
-int main(){
+/* int main(){
     double horiz = 0.5; // Horizon temporelle
     double dt = horiz/(nt-1); // Pas temporel
     auto start = std::chrono::high_resolution_clock::now();
@@ -144,4 +142,4 @@ int main(){
     exportsolution(solution);
     K(D,dx).print();
     return EXIT_SUCCESS;
-}
+} */

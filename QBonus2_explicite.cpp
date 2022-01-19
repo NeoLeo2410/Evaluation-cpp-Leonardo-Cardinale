@@ -1,18 +1,15 @@
-#include "Matrix.cpp"
-#include <fstream>
-#include "Eigen/Dense"
+#include "QBonus1_implicite.cpp"
 #include "Eigen/Sparse"
 
-unsigned nx = 21; // Nombre de points
-unsigned nt = 1001; // Nombre de dates
+unsigned nx_QB2e = 21; // Nombre de points
 
-double dx = 1.0/(nx-1); // Pas spatial
+double dx_QB2e = 1.0/(nx_QB2e-1); // Pas spatial
 
 // Construction de la condition initiale
 
-std::vector<double> initial_vector(double& dx){
-    std::vector<double> initial(nx,0.0);
-    for (unsigned i = 0; i < nx; i++){
+std::vector<double> initial_vector_QB2e(double& dx){
+    std::vector<double> initial(nx_QB2e,0.0);
+    for (unsigned i = 0; i < nx_QB2e; i++){
         double x = i * dx;
         double y;
         y = 0.5 + std::sin(2 * M_PI * x) - 0.5 * std::cos(2 * M_PI * x);
@@ -21,11 +18,10 @@ std::vector<double> initial_vector(double& dx){
     return initial;
 }
 
-std::vector<double> vec = initial_vector(dx);
-unsigned n = vec.size();
-Matrix D(1,n,1.0); // Matrice de conductivité thermique
+std::vector<double> vec_QB2e = initial_vector_QB2e(dx_QB2e);
+Matrix D_QB2e(1,nx_QB2e,1.0); // Matrice de conductivité thermique
 
-Eigen::SparseMatrix<double> K(Matrix D, double dx){
+Eigen::SparseMatrix<double> K_QB2e(Matrix D, double dx){
     unsigned n = D.getcolumns();
     Eigen::SparseMatrix<double> cond(n, n);
     for (unsigned i = 0; i < n; i++){
@@ -50,24 +46,27 @@ Eigen::SparseMatrix<double> K(Matrix D, double dx){
 
 // Fonction qui entre en jeu dans la méthode d'Euler. On travaille avec des vecteurs convertis en matrices lignes, d'où le passage par la transposée pour la phase de calcul, puis de nouveau pour retourner le résultat
 
-Eigen::VectorXd f(Eigen::VectorXd T){
-    return K(D,dx) * T;
+Eigen::VectorXd f_QB2e(Eigen::VectorXd T){
+    return K_QB2e(D_QB2e,dx_QB2e) * T;
 }
 
-// Conversion Eigen::VectorXd -> std::vector
+// Conversion Matrix -> Eigen::MatrixXd
 
-std::vector<double> eigentovector(Eigen::VectorXd v){
-    unsigned n = v.rows();
-    std::vector<double> vec(n);
+Eigen::MatrixXd matrixtoeigen_QB2e(Matrix M){
+    unsigned n = M.getrows();
+    unsigned p = M.getcolumns();
+    Eigen::MatrixXd m(n,p);
     for (unsigned i = 0; i < n; i++){
-        vec[i] = v(i);
-    }
-    return vec;
+        for (unsigned j = 0; j < p; j++){
+            m(i,j) = M(i,j);
+        }
+    } 
+    return m;
 }
 
 // Conversion std::vector -> Eigen::VectorXd
 
-Eigen::VectorXd vectortoeigen(std::vector<double> vec){
+Eigen::VectorXd vectortoeigen_QB2e(std::vector<double> vec){
     unsigned n = vec.size();
     Eigen::VectorXd V(n);
     for (unsigned i = 0; i < n; i++){
@@ -76,17 +75,28 @@ Eigen::VectorXd vectortoeigen(std::vector<double> vec){
     return V;
 }
 
+// Conversion Eigen::VectorXd -> std::vector
+
+std::vector<double> eigentovector_QB2e(Eigen::VectorXd v){
+    unsigned n = v.rows();
+    std::vector<double> vec(n);
+    for (unsigned i = 0; i < n; i++){
+        vec[i] = v(i);
+    }
+    return vec;
+}
+
 // Avec la méthode d'Euler, on obtient un vecteur de vecteurs où l'élément (i,j) représente T_j(i*dt)
 
-std::vector<std::vector<double> > euler_explicite(double& step, double& T){
+std::vector<std::vector<double> > euler_explicite_QB2e(double& step, double& T){
     std::vector<double> dates {0.0};
-    std::vector<std::vector<double> > solution {vec};
+    std::vector<std::vector<double> > solution {vec_QB2e};
     while (dates[dates.size() - 1] + step < T){
-        Eigen::VectorXd prev(n);
-        prev = vectortoeigen(solution[solution.size() - 1]);
-        Eigen::VectorXd next(n);
-        next = f(prev) * step;
-        solution.push_back(eigentovector(prev + next));
+        Eigen::VectorXd prev(nx_QB2e);
+        prev = vectortoeigen_QB2e(solution[solution.size() - 1]);
+        Eigen::VectorXd next(nx_QB2e);
+        next = f_QB2e(prev) * step;
+        solution.push_back(eigentovector_QB2e(prev + next));
         dates.push_back(dates[dates.size() - 1] + step);
     }
     return solution;
@@ -94,7 +104,7 @@ std::vector<std::vector<double> > euler_explicite(double& step, double& T){
 
 // Pour exporter au format .txt une liste de listes pouvant être passée en argument à numpy.array() en Python
 
-void exportsolution(std::vector<std::vector<double> > v){
+void exportsolution_QB2e(std::vector<std::vector<double> > v){
     unsigned n = v.size();
     unsigned m = v[0].size();
     std::ofstream myfile;
@@ -112,7 +122,7 @@ void exportsolution(std::vector<std::vector<double> > v){
     myfile.close();
 }
 
-int main(){
+/* int main(){
     double horiz = 0.5; // Horizon temporelle
     double dt = horiz/(nt-1); // Pas temporel
     auto start = std::chrono::high_resolution_clock::now();
@@ -123,4 +133,4 @@ int main(){
     exportsolution(solution);
     std::cout << Eigen::MatrixXd(K(D,dx)) << std::endl;
     return EXIT_SUCCESS;
-}
+} */
