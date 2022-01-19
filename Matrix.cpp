@@ -129,7 +129,7 @@ void Matrix::print(){
     std::cout << "Matrix: " << std::endl;
     for (unsigned i = 0; i < this->rows; i++){
         for (unsigned j = 0; j < this->columns; j++){
-            std::cout << "[" << matrix[i][j] << "] ";
+            std::cout << "[" << matrix[i][j] << "]";
         }
         std::cout << std::endl;
     }

@@ -2,7 +2,7 @@
 #include <fstream>
 #include "Eigen/Dense"
 #include "Eigen/Sparse"
-#include "Eigen/IterativeLinearSolvers"
+#include "Eigen/SparseLU"
 
 unsigned nx = 21; // Nombre de points
 unsigned nt = 1001; // Nombre de dates
@@ -91,8 +91,10 @@ std::vector<std::vector<double> > euler_implicite(double& step, double& T){
         }
         Eigen::SparseMatrix<double> A;
         A = I - (K(D,dx)*step);
-        Eigen::ConjugateGradient<Eigen::SparseMatrix<double>, Eigen::Upper> solver;
-        solution.push_back(eigentovector(solver.compute(A).solve(prev)));
+        Eigen::SparseLU<Eigen::SparseMatrix<double>, Eigen::COLAMDOrdering<int> > solver;
+        solver.analyzePattern(A);
+        solver.factorize(A);
+        solution.push_back(eigentovector(solver.solve(prev)));
         dates.push_back(dates[dates.size() - 1] + step);
     }
     return solution;
@@ -127,5 +129,6 @@ int main(){
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << duration.count() << " μs" << std::endl;
     exportsolution(solution);
+    std::cout << Eigen::MatrixXd(K(D,dx)) << std::endl;
     return EXIT_SUCCESS;
 }

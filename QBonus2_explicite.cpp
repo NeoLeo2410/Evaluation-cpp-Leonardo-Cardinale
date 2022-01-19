@@ -121,5 +121,6 @@ int main(){
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << duration.count() << " μs" << std::endl;
     exportsolution(solution);
+    std::cout << Eigen::MatrixXd(K(D,dx)) << std::endl;
     return EXIT_SUCCESS;
 }

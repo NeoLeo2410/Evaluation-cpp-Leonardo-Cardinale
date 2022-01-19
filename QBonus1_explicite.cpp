@@ -109,5 +109,6 @@ int main(){
     double dt = horiz/(nt-1); // Pas temporel
     std::vector<std::vector<double> > solution = euler_explicite(dt,horiz);
     exportsolution(solution);
+    K(D,dx).print();
     return EXIT_SUCCESS;
 }

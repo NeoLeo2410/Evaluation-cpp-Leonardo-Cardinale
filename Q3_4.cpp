@@ -142,5 +142,6 @@ int main(){
     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
     std::cout << duration.count() << " μs" << std::endl;
     exportsolution(solution);
+    K(D,dx).print();
     return EXIT_SUCCESS;
 }
