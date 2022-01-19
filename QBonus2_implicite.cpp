@@ -128,16 +128,3 @@ void exportsolution_QB2i(std::vector<std::vector<double> > v){
     myfile << v[n-1][m-1] << std::endl;
     myfile.close();
 }
-
-/* int main(){
-    double horiz = 0.5; // Horizon temporelle
-    double dt = horiz/(nt-1); // Pas temporel
-    auto start = std::chrono::high_resolution_clock::now();
-    std::vector<std::vector<double> > solution = euler_implicite(dt,horiz);
-    auto stop = std::chrono::high_resolution_clock::now();
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout << duration.count() << " μs" << std::endl;
-    exportsolution(solution);
-    std::cout << Eigen::MatrixXd(K(D,dx)) << std::endl;
-    return EXIT_SUCCESS;
-} */
