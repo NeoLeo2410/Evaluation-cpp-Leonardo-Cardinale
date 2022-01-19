@@ -1,8 +1,5 @@
 #include "QBonus2_implicite.cpp"
 
-// A l'exécution, on obtient des temps de calcul pour Euler explicite/implicite avec D = 1, version sparse ou non.
-// Cela correspond donc aux questions 2, 4, Bonus 2 explicite/implicite.
-
 int main(){
 
     unsigned nt = 1001;
@@ -29,12 +26,20 @@ int main(){
 
     // Question Bonus 1 (explicite)
 
+    auto start_QB1e = std::chrono::high_resolution_clock::now();
     std::vector<std::vector<double> > solution_QB1e = euler_explicite_QB1e(dt,horiz);
+    auto stop_QB1e = std::chrono::high_resolution_clock::now();
+    auto duration_QB1e = std::chrono::duration_cast<std::chrono::microseconds>(stop_QB1e - start_QB1e);
+    std::cout << "Le calcul pour la question bonus 1 (explicite) prend " << duration_QB1e.count() << " μs." << std::endl;
     exportsolution_QB1e(solution_QB1e);
 
     // Question Bonus 1 (implicite)
 
+    auto start_QB1i = std::chrono::high_resolution_clock::now();
     std::vector<std::vector<double> > solution_QB1i = euler_implicite_QB1i(dt,horiz);
+    auto stop_QB1i = std::chrono::high_resolution_clock::now();
+    auto duration_QB1i = std::chrono::duration_cast<std::chrono::microseconds>(stop_QB1i - start_QB1i);
+    std::cout << "Le calcul pour la question bonus 1 (implicite) prend " << duration_QB1i.count() << " μs." << std::endl;
     exportsolution_QB1i(solution_QB1i);
 
     // Question Bonus 2 (explicite)

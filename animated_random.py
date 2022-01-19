@@ -9,7 +9,7 @@ dx = 1/(nx-1)
 dt = 0.5/(nt-1)
 x = np.array([i * dx for i in range(nx)])
 
-# On choisit le profil obtenu avec la methode d'Euler implicite et les matrices creuses par exemple.
+# On choisit le profil obtenu avec la methode d'Euler implicite et la matrice de conductivités aléatoire.
 
 arr = np.loadtxt("QBonus1_implicite.txt")
 
