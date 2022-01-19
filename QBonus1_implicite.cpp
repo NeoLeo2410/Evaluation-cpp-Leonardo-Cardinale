@@ -45,7 +45,7 @@ std::vector<double> eigentovector(Eigen::VectorXd v){
 
 // Avec la méthode d'Euler, on obtient un vecteur de vecteurs où l'élément (i,j) représente T_j(i*dt)
 
-std::vector<std::vector<double> > euler_implicite_QB1i(double& step, double& T){
+std::vector<std::vector<double> > euler_implicite_QB1i(const double& step, const double& T){
     std::vector<double> dates {0.0};
     std::vector<std::vector<double> > solution {vec};
     while (dates[dates.size() - 1] + step < T){
@@ -68,7 +68,7 @@ std::vector<std::vector<double> > euler_implicite_QB1i(double& step, double& T){
 
 // Pour exporter au format .txt une liste de listes pouvant être passée en argument à numpy.array() en Python
 
-void exportsolution_QB1i(std::vector<std::vector<double> > v){
+void exportsolution_QB1i(std::vector<std::vector<double> >& v){
     unsigned n = v.size();
     unsigned m = v[0].size();
     std::ofstream myfile;

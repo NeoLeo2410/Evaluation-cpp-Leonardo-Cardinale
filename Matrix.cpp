@@ -3,7 +3,7 @@
 
 // Constructeur
 
-Matrix::Matrix(unsigned n, unsigned p, double value){
+Matrix::Matrix(const unsigned n, const unsigned p, const double value){
     this->rows = n;
     this->columns = p;
     this->matrix.resize(n);
@@ -14,7 +14,7 @@ Matrix::Matrix(unsigned n, unsigned p, double value){
 
 // Conversion d'un vecteur 1D en matrice 1D
 
-Matrix::Matrix(std::vector<double> vec, unsigned k){
+Matrix::Matrix(std::vector<double> vec, const unsigned k){
     unsigned n = vec.size();
     this->rows = 1;
     this->columns = n;
@@ -81,7 +81,7 @@ Matrix Matrix::operator*(Matrix B){
 
 // Multiplication d'une matrice par un scalaire
 
-Matrix Matrix::operator*(double scalar){
+Matrix Matrix::operator*(const double scalar){
     Matrix B(this->rows, this->columns, 0.0);
     unsigned i;
     unsigned j;
@@ -163,13 +163,4 @@ std::vector<double> Matrix::tovector(){
         std::vector<double> result = this->matrix[0];
         return result;
     }
-}
-
-// Echange de lignes pour l'algorithme de Gauss
-
-void Matrix::swap(unsigned i, unsigned j){
-    std::vector<double> vec1 = this->matrix[i];
-    std::vector<double> vec2 = this->matrix[j];
-    this->matrix[i] = vec2;
-    this->matrix[j] = vec1;
 }

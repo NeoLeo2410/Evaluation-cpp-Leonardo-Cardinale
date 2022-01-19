@@ -2,9 +2,9 @@
 
 int main(){
 
-    unsigned nt = 1001;
-    double horiz = 0.5; // Horizon temporelle
-    double dt = horiz/(nt-1); // Pas temporel
+    const unsigned nt = 1001;
+    const double horiz = 0.5; // Horizon temporelle
+    const double dt = horiz/(nt-1); // Pas temporel
     
     // Question 2
 

@@ -1,12 +1,12 @@
 #include "Matrix.cpp"
 
-unsigned nx = 21; // Nombre de points
+const unsigned nx = 21; // Nombre de points
 
-double dx = 1.0/(nx-1); // Pas spatial
+const double dx = 1.0/(nx-1); // Pas spatial
 
 // Construction de la condition initiale
 
-std::vector<double> initial_vector(double& dx){
+std::vector<double> initial_vector(const double& dx){
     std::vector<double> initial(nx,0.0);
     for (unsigned i = 0; i < nx; i++){
         double x = i * dx;
@@ -17,10 +17,10 @@ std::vector<double> initial_vector(double& dx){
     return initial;
 }
 
-std::vector<double> vec = initial_vector(dx);
+const std::vector<double> vec = initial_vector(dx);
 Matrix D(1,nx,1.0); // Matrice de conductivité thermique
 
-Matrix K(Matrix D, double dx){
+Matrix K(Matrix& D, const double& dx){
     unsigned n = D.getcolumns();
     Matrix cond(n, n, 0.0);
     for (unsigned i = 0; i < n; i++){
@@ -45,7 +45,7 @@ Matrix K(Matrix D, double dx){
 
 // Fonction qui entre en jeu dans la méthode d'Euler. On travaille avec des vecteurs convertis en matrices lignes, d'où le passage par la transposée pour la phase de calcul, puis de nouveau pour retourner le résultat
 
-Matrix f(Matrix T){ 
+Matrix f(Matrix& T){ 
     Matrix T1(T.transpose());
     Matrix m(K(D,dx) * T1);
     Matrix n(m.transpose());
@@ -54,7 +54,7 @@ Matrix f(Matrix T){
 
 // Avec la méthode d'Euler, on obtient un vecteur de vecteurs où l'élément (i,j) représente T_j(i*dt)
 
-std::vector<std::vector<double> > euler_explicite_Q2(double& step, double& T){
+std::vector<std::vector<double> > euler_explicite_Q2(const double& step, const double& T){
     std::vector<double> dates {0.0};
     std::vector<std::vector<double> > solution {vec};
     while (dates[dates.size() - 1] + step < T){
@@ -68,7 +68,7 @@ std::vector<std::vector<double> > euler_explicite_Q2(double& step, double& T){
 
 // Pour exporter au format .txt une liste de listes pouvant être passée en argument à numpy.array() en Python
 
-void exportsolution_Q2(std::vector<std::vector<double> > v){
+void exportsolution_Q2(std::vector<std::vector<double> >& v){
     unsigned n = v.size();
     unsigned m = v[0].size();
     std::ofstream myfile;

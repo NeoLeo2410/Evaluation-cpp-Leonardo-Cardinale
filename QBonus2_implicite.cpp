@@ -88,7 +88,7 @@ std::vector<double> eigentovector_QB2i(Eigen::VectorXd v){
 
 // Avec la méthode d'Euler, on obtient un vecteur de vecteurs où l'élément (i,j) représente T_j(i*dt)
 
-std::vector<std::vector<double> > euler_implicite_QB2i(double& step, double& T){
+std::vector<std::vector<double> > euler_implicite_QB2i(const double& step, const double& T){
     std::vector<double> dates {0.0};
     std::vector<std::vector<double> > solution {vec_QB2i};
     while (dates[dates.size() - 1] + step < T){

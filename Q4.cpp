@@ -17,7 +17,7 @@ double norm_squared(Matrix& A){
 
 // Pour résoudre des systèmes linéaires associés à une matrice symétrique définie positive
 
-Matrix gradient_conjugue(Matrix A, Matrix b, Matrix x0, double eps){
+Matrix gradient_conjugue(Matrix A, Matrix b, Matrix x0, const double eps){
     Matrix X(x0.transpose());
     Matrix r(b.transpose() - (A * X));
     Matrix p(r);
@@ -41,7 +41,7 @@ Matrix gradient_conjugue(Matrix A, Matrix b, Matrix x0, double eps){
 
 // Avec la méthode d'Euler, on obtient un vecteur de vecteurs où l'élément (i,j) représente T_j(i*dt)
 
-std::vector<std::vector<double> > euler_implicite_Q4(double& step, double& T){
+std::vector<std::vector<double> > euler_implicite_Q4(const double& step, const double& T){
     std::vector<double> dates {0.0};
     std::vector<std::vector<double> > solution {vec};
     while (dates[dates.size() - 1] + step < T){
@@ -60,7 +60,7 @@ std::vector<std::vector<double> > euler_implicite_Q4(double& step, double& T){
 
 // Pour exporter au format .txt une liste de listes pouvant être passée en argument à numpy.array() en Python
 
-void exportsolution_Q4(std::vector<std::vector<double> > v){
+void exportsolution_Q4(std::vector<std::vector<double> >& v){
     unsigned n = v.size();
     unsigned m = v[0].size();
     std::ofstream myfile;
