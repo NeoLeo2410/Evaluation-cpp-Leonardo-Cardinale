@@ -3,6 +3,8 @@
 Utiliser C++ 20 pour la compilation.
 ATTENTION à la version Python (utilisation de f string, donc version Python > 3.6).
 
+Exécuter le fichier main.out pour obtenir les résultats.
+
 La question 1 est traitée dans les fichiers intitulés Matrix (.hpp pour la définition de la classe, .cpp pour les diverses méthodes ou constructeurs associés).
 Les autres questions sont traitées dans les fichiers portant le numéro/nom de la question correspondante. 
 Quelques tests ont été effectués lors de l'élaboration de la classe Matrix dans le fichier test_matrix.cpp.
